@@ -6,8 +6,31 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Easy for Lazy"/>
-<meta name="theme-color" content="#f8f5ff"/>
+<meta name="theme-color" content="#6b3fa0"/>
+<meta name="description" content="Your all-in-one personal productivity space — tasks, habits, notes, calendar and more."/>
 <title>Easy for Lazy — Your Personal Space</title>
+
+<!-- PWA Manifest inline as data URI -->
+<link rel="manifest" href="data:application/manifest+json,{
+  %22name%22:%22Easy for Lazy%22,
+  %22short_name%22:%22EFL%22,
+  %22description%22:%22Your personal productivity space%22,
+  %22start_url%22:%22.%22,
+  %22display%22:%22standalone%22,
+  %22background_color%22:%22%236b3fa0%22,
+  %22theme_color%22:%22%236b3fa0%22,
+  %22orientation%22:%22portrait%22,
+  %22icons%22:[
+    {%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%236b3fa0'/%3E%3Ctext x='50%25' y='58%25' font-size='280' text-anchor='middle' dominant-baseline='middle' font-family='serif' fill='white'%3E✦%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22,%22purpose%22:%22any maskable%22}
+  ]
+}"/>
+
+<!-- Apple Touch Icon (iOS home screen) — inline SVG as PNG via canvas trick -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%236b3fa0'/><text x='50%25' y='58%25' font-size='280' text-anchor='middle' dominant-baseline='middle' font-family='serif' fill='white'>✦</text></svg>"/>
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%236b3fa0'/><text x='50%25' y='58%25' font-size='280' text-anchor='middle' dominant-baseline='middle' font-family='serif' fill='white'>✦</text></svg>"/>
+
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -2066,6 +2089,72 @@ function renderEvents() {
 
 // ============ UTILS ============
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ============ PWA ICON GENERATOR ============
+// iOS requires a real PNG for apple-touch-icon — generate one via canvas at runtime
+(function() {
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512; canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    // Background with rounded corners
+    const r = 100;
+    ctx.beginPath();
+    ctx.moveTo(r, 0); ctx.lineTo(512-r, 0);
+    ctx.quadraticCurveTo(512, 0, 512, r);
+    ctx.lineTo(512, 512-r);
+    ctx.quadraticCurveTo(512, 512, 512-r, 512);
+    ctx.lineTo(r, 512);
+    ctx.quadraticCurveTo(0, 512, 0, 512-r);
+    ctx.lineTo(0, r);
+    ctx.quadraticCurveTo(0, 0, r, 0);
+    ctx.closePath();
+    // Purple gradient fill
+    const grad = ctx.createLinearGradient(0, 0, 512, 512);
+    grad.addColorStop(0, '#8b5cc8');
+    grad.addColorStop(1, '#4a1f80');
+    ctx.fillStyle = grad;
+    ctx.fill();
+    // Subtle inner glow
+    const glow = ctx.createRadialGradient(256, 200, 30, 256, 256, 300);
+    glow.addColorStop(0, 'rgba(255,255,255,0.18)');
+    glow.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = glow;
+    ctx.fill();
+    // Draw "E" letter (for Easy) in elegant serif style
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.beginPath();
+    ctx.arc(256, 256, 180, 0, Math.PI * 2);
+    ctx.fill();
+    // Main text
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 220px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 20;
+    ctx.fillText('E', 256, 270);
+    // Small sparkle dot
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.beginPath();
+    ctx.arc(340, 160, 18, 0, Math.PI*2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(320, 145, 9, 0, Math.PI*2);
+    ctx.fill();
+
+    const png = canvas.toDataURL('image/png');
+    // Set as apple-touch-icon
+    let link = document.querySelector('link[rel="apple-touch-icon"]');
+    if (!link) { link = document.createElement('link'); link.rel = 'apple-touch-icon'; document.head.appendChild(link); }
+    link.href = png;
+    // Also set favicon
+    let fav = document.querySelector('link[rel="icon"]');
+    if (!fav) { fav = document.createElement('link'); fav.rel = 'icon'; document.head.appendChild(fav); }
+    fav.href = png;
+  } catch(e) {}
+})();
 </script>
 </body>
 </html>
