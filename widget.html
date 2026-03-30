@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="My Tasks"/>
+<meta name="theme-color" content="#1e1035"/>
+<title>My Tasks — Easy for Lazy</title>
+
+<link rel="manifest" href="data:application/manifest+json,{
+  %22name%22:%22My Tasks%22,
+  %22short_name%22:%22Tasks%22,
+  %22start_url%22:%22widget.html%22,
+  %22display%22:%22standalone%22,
+  %22background_color%22:%22%231e1035%22,
+  %22theme_color%22:%22%231e1035%22,
+  %22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%236b3fa0'/%3E%3Ctext x='50%25' y='58%25' font-size='240' text-anchor='middle' dominant-baseline='middle' font-family='serif' fill='white'%3E✓%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22,%22purpose%22:%22any maskable%22}]
+}"/>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%236b3fa0'/><text x='50%25' y='58%25' font-size='240' text-anchor='middle' dominant-baseline='middle' font-family='serif' fill='white'>✓</text></svg>"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%236b3fa0'/><text x='50%25' y='58%25' font-size='240' text-anchor='middle' dominant-baseline='middle' font-family='serif' fill='white'>✓</text></svg>"/>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── THEMES ── */
+body {
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  padding-top: calc(20px + env(safe-area-inset-top));
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  transition: background 0.4s;
+}
+
+/* DARK theme */
+body.theme-dark {
+  background: #0d0820;
+  background-image: radial-gradient(ellipse at 30% 20%, rgba(107,63,160,0.3) 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 80%, rgba(155,109,214,0.15) 0%, transparent 50%);
+}
+body.theme-dark .widget-card {
+  background: rgba(30,16,53,0.92);
+  border: 1px solid rgba(155,109,255,0.2);
+  backdrop-filter: blur(20px);
+  color: #f0eaff;
+}
+body.theme-dark .task-item { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.08); color: #e8e0ff; }
+body.theme-dark .task-item:hover { background: rgba(255,255,255,0.1); }
+body.theme-dark .add-input { background: rgba(255,255,255,0.08); border-color: rgba(155,109,255,0.3); color: #f0eaff; }
+body.theme-dark .add-input::placeholder { color: rgba(255,255,255,0.3); }
+body.theme-dark .count-num { color: #c4a8ff; }
+body.theme-dark .count-label { color: rgba(200,180,255,0.6); }
+body.theme-dark .section-tag { color: rgba(200,180,255,0.5); }
+body.theme-dark .empty-msg { color: rgba(200,180,255,0.4); }
+body.theme-dark .open-app-btn { color: rgba(180,150,255,0.5); }
+body.theme-dark .open-app-btn:hover { color: rgba(200,180,255,0.8); }
+body.theme-dark .add-btn { background: #6b3fa0; }
+body.theme-dark .add-btn:hover { background: #8b5cc8; }
+
+/* PURPLE theme */
+body.theme-purple {
+  background: #f8f5ff;
+  background-image: radial-gradient(ellipse at 20% 30%, rgba(180,150,255,0.2) 0%, transparent 60%);
+}
+body.theme-purple .widget-card {
+  background: #ffffff;
+  border: 1px solid rgba(139,100,220,0.2);
+  color: #1e1035;
+  box-shadow: 0 8px 40px rgba(107,63,160,0.15);
+}
+body.theme-purple .task-item { background: #f3eeff; border-color: rgba(139,100,220,0.12); color: #1e1035; }
+body.theme-purple .task-item:hover { background: #ebe4ff; }
+body.theme-purple .add-input { background: #f3eeff; border-color: rgba(139,100,220,0.25); color: #1e1035; }
+body.theme-purple .add-input::placeholder { color: #9b8abf; }
+body.theme-purple .count-num { color: #6b3fa0; }
+body.theme-purple .count-label { color: #8e7aad; }
+body.theme-purple .section-tag { color: #b0a0cc; }
+body.theme-purple .empty-msg { color: #b0a0cc; }
+body.theme-purple .open-app-btn { color: #b0a0cc; }
+body.theme-purple .open-app-btn:hover { color: #6b3fa0; }
+body.theme-purple .add-btn { background: #6b3fa0; }
+body.theme-purple .add-btn:hover { background: #8b5cc8; }
+
+/* LAVENDER theme */
+body.theme-lavender {
+  background: linear-gradient(135deg, #ddd0f8 0%, #e8e0ff 100%);
+}
+body.theme-lavender .widget-card {
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(150,100,220,0.2);
+  backdrop-filter: blur(16px);
+  color: #2a1060;
+  box-shadow: 0 8px 40px rgba(100,60,180,0.18);
+}
+body.theme-lavender .task-item { background: rgba(255,255,255,0.6); border-color: rgba(140,90,200,0.15); color: #2a1060; }
+body.theme-lavender .task-item:hover { background: rgba(255,255,255,0.85); }
+body.theme-lavender .add-input { background: rgba(255,255,255,0.6); border-color: rgba(140,90,200,0.3); color: #2a1060; }
+body.theme-lavender .add-input::placeholder { color: rgba(80,40,140,0.4); }
+body.theme-lavender .count-num { color: #5a2fa0; }
+body.theme-lavender .count-label { color: rgba(80,40,140,0.6); }
+body.theme-lavender .section-tag { color: rgba(100,60,160,0.5); }
+body.theme-lavender .empty-msg { color: rgba(100,60,160,0.5); }
+body.theme-lavender .open-app-btn { color: rgba(100,60,160,0.4); }
+body.theme-lavender .open-app-btn:hover { color: #5a2fa0; }
+body.theme-lavender .add-btn { background: #6b3fa0; }
+
+/* BLUSH theme */
+body.theme-blush {
+  background: linear-gradient(135deg, #ffd6e8 0%, #ffe8f0 100%);
+}
+body.theme-blush .widget-card {
+  background: rgba(255,255,255,0.78);
+  border: 1px solid rgba(220,100,140,0.2);
+  backdrop-filter: blur(16px);
+  color: #3a0a20;
+  box-shadow: 0 8px 40px rgba(200,80,120,0.15);
+}
+body.theme-blush .task-item { background: rgba(255,240,248,0.8); border-color: rgba(220,100,140,0.15); color: #3a0a20; }
+body.theme-blush .task-item:hover { background: rgba(255,220,238,0.9); }
+body.theme-blush .add-input { background: rgba(255,240,248,0.8); border-color: rgba(220,100,140,0.3); color: #3a0a20; }
+body.theme-blush .add-input::placeholder { color: rgba(160,60,100,0.4); }
+body.theme-blush .count-num { color: #c0355a; }
+body.theme-blush .count-label { color: rgba(160,60,100,0.6); }
+body.theme-blush .section-tag { color: rgba(180,80,120,0.5); }
+body.theme-blush .empty-msg { color: rgba(180,80,120,0.5); }
+body.theme-blush .open-app-btn { color: rgba(180,80,120,0.4); }
+body.theme-blush .open-app-btn:hover { color: #c0355a; }
+body.theme-blush .add-btn { background: #c0355a; }
+body.theme-blush .add-btn:hover { background: #e0557a; }
+
+/* MINT theme */
+body.theme-mint {
+  background: linear-gradient(135deg, #c8f5e8 0%, #e0fff5 100%);
+}
+body.theme-mint .widget-card {
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(46,158,114,0.2);
+  backdrop-filter: blur(16px);
+  color: #0a2a1a;
+  box-shadow: 0 8px 40px rgba(46,158,114,0.15);
+}
+body.theme-mint .task-item { background: rgba(240,255,250,0.8); border-color: rgba(46,158,114,0.15); color: #0a2a1a; }
+body.theme-mint .task-item:hover { background: rgba(210,255,240,0.9); }
+body.theme-mint .add-input { background: rgba(240,255,250,0.8); border-color: rgba(46,158,114,0.3); color: #0a2a1a; }
+body.theme-mint .add-input::placeholder { color: rgba(30,120,80,0.4); }
+body.theme-mint .count-num { color: #1a7a50; }
+body.theme-mint .count-label { color: rgba(30,100,70,0.6); }
+body.theme-mint .section-tag { color: rgba(40,130,90,0.5); }
+body.theme-mint .empty-msg { color: rgba(40,130,90,0.5); }
+body.theme-mint .open-app-btn { color: rgba(40,130,90,0.4); }
+body.theme-mint .open-app-btn:hover { color: #1a7a50; }
+body.theme-mint .add-btn { background: #2e9e72; }
+body.theme-mint .add-btn:hover { background: #3ebc88; }
+
+/* GLASS theme */
+body.theme-glass {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+body.theme-glass .widget-card {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  color: #ffffff;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+body.theme-glass .task-item { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); color: #ffffff; }
+body.theme-glass .task-item:hover { background: rgba(255,255,255,0.2); }
+body.theme-glass .add-input { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); color: #ffffff; }
+body.theme-glass .add-input::placeholder { color: rgba(255,255,255,0.4); }
+body.theme-glass .count-num { color: #ffffff; }
+body.theme-glass .count-label { color: rgba(255,255,255,0.6); }
+body.theme-glass .section-tag { color: rgba(255,255,255,0.4); }
+body.theme-glass .empty-msg { color: rgba(255,255,255,0.4); }
+body.theme-glass .open-app-btn { color: rgba(255,255,255,0.4); }
+body.theme-glass .open-app-btn:hover { color: rgba(255,255,255,0.85); }
+body.theme-glass .add-btn { background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); }
+body.theme-glass .add-btn:hover { background: rgba(255,255,255,0.35); }
+body.theme-glass .circle { border-color: rgba(255,255,255,0.5) !important; }
+body.theme-glass .circle.done { background: rgba(255,255,255,0.3) !important; border-color: rgba(255,255,255,0.6) !important; }
+
+/* ── WIDGET CARD ── */
+.widget-card {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 24px;
+  padding: 24px;
+  position: relative;
+  transition: all 0.3s;
+}
+
+/* Header */
+.widget-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.widget-count { display: flex; flex-direction: column; }
+.count-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 52px;
+  line-height: 1;
+  font-weight: 400;
+}
+.count-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: lowercase;
+  margin-top: 2px;
+}
+.header-right { display: flex; gap: 8px; align-items: center; }
+.add-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+.add-btn:active { transform: scale(0.92); }
+.open-app-btn {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+  transition: color 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* Add input row */
+.add-row {
+  display: none;
+  gap: 8px;
+  margin-bottom: 14px;
+  animation: slideDown 0.2s ease;
+}
+.add-row.show { display: flex; }
+@keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:none; } }
+.add-input {
+  flex: 1;
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+}
+.add-confirm-btn {
+  background: #6b3fa0;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.add-confirm-btn:hover { background: #8b5cc8; }
+
+/* Task list */
+.task-list { display: flex; flex-direction: column; gap: 8px; max-height: 55vh; overflow-y: auto; }
+.task-list::-webkit-scrollbar { width: 3px; }
+.task-list::-webkit-scrollbar-thumb { background: rgba(155,109,255,0.3); border-radius: 3px; }
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.task-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+}
+.task-item.priority-high::before { background: #ff6b8a; }
+.task-item.priority-medium::before { background: #ffd96b; }
+.task-item.priority-low::before { background: #6bffb8; }
+.task-item.completing { opacity: 0.4; transform: scale(0.97); transition: all 0.3s; }
+
+.circle {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(155,109,255,0.5);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.circle:hover { border-color: #6b3fa0; background: rgba(107,63,160,0.15); }
+.circle.done {
+  background: #6b3fa0;
+  border-color: #6b3fa0;
+}
+.circle.done::after { content: '✓'; font-size: 12px; color: white; font-weight: 700; }
+
+.task-text {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  word-break: break-word;
+}
+.task-text.done-text { text-decoration: line-through; opacity: 0.45; }
+
+.task-meta-small {
+  font-size: 10px;
+  opacity: 0.5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.section-tag {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  display: block;
+}
+
+.empty-msg {
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.empty-msg .empty-icon { font-size: 36px; display: block; margin-bottom: 8px; }
+
+/* Footer */
+.widget-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(128,90,200,0.12);
+}
+.footer-stats { font-size: 11px; opacity: 0.45; }
+.theme-dots { display: flex; gap: 5px; }
+.theme-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  cursor: pointer; border: 2px solid transparent;
+  transition: all 0.2s;
+}
+.theme-dot:hover, .theme-dot.active { border-color: white; transform: scale(1.3); }
+.theme-dot[data-t="dark"] { background: #2d1a4a; }
+.theme-dot[data-t="purple"] { background: #6b3fa0; }
+.theme-dot[data-t="lavender"] { background: #b89eee; }
+.theme-dot[data-t="blush"] { background: #f090b0; }
+.theme-dot[data-t="mint"] { background: #3ebc88; }
+.theme-dot[data-t="glass"] { background: linear-gradient(135deg,#667eea,#764ba2); }
+
+/* Completed section toggle */
+.done-toggle {
+  font-size: 11px; opacity: 0.5; cursor: pointer;
+  background: none; border: none; padding: 4px 0;
+  font-family: 'DM Sans', sans-serif;
+  display: block; width: 100%; text-align: left;
+  margin-top: 8px;
+}
+.done-toggle:hover { opacity: 0.8; }
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(155,109,255,0.3); border-radius: 3px; }
+
+/* animations */
+@keyframes checkBounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+.circle.bounce { animation: checkBounce 0.3s ease; }
+</style>
+</head>
+<body class="theme-dark">
+
+<div class="widget-card" id="widget-card">
+  <!-- Header -->
+  <div class="widget-header">
+    <div class="widget-count">
+      <div class="count-num" id="count-num">0</div>
+      <div class="count-label" id="count-label">to-dos</div>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="open-app-btn" id="open-app-link">Open App ↗</a>
+      <button class="add-btn" onclick="toggleAddRow()" title="Add task">+</button>
+    </div>
+  </div>
+
+  <!-- Add row -->
+  <div class="add-row" id="add-row">
+    <input class="add-input" id="add-input" type="text" placeholder="New task..." maxlength="100"
+      onkeydown="if(event.key==='Enter') confirmAdd()"/>
+    <button class="add-confirm-btn" onclick="confirmAdd()">Add</button>
+  </div>
+
+  <!-- Task list -->
+  <div class="task-list" id="task-list"></div>
+
+  <!-- Footer -->
+  <div class="widget-footer">
+    <div class="footer-stats" id="footer-stats"></div>
+    <div class="theme-dots" id="theme-dots"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+function load(key, def) {
+  try { return JSON.parse(localStorage.getItem('efl_'+key)) ?? def; }
+  catch { return def; }
+}
+function save(key, val) { localStorage.setItem('efl_'+key, JSON.stringify(val)); }
+
+let tasks = load('tasks', []);
+let settings = load('settings', { widgetTheme: 'dark' });
+let showDone = false;
+let currentTheme = settings.widgetTheme || 'dark';
+
+// ── THEME ──
+const THEMES = ['dark','purple','lavender','blush','mint','glass'];
+
+function applyTheme(t) {
+  currentTheme = t;
+  document.body.className = 'theme-' + t;
+  document.querySelectorAll('.theme-dot').forEach(d => {
+    d.classList.toggle('active', d.dataset.t === t);
+  });
+  settings.widgetTheme = t;
+  save('settings', settings);
+  // update meta theme-color
+  const colors = { dark:'#0d0820', purple:'#f8f5ff', lavender:'#ddd0f8', blush:'#ffd6e8', mint:'#c8f5e8', glass:'#764ba2' };
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', colors[t] || '#0d0820');
+}
+
+function buildThemeDots() {
+  const el = document.getElementById('theme-dots');
+  el.innerHTML = THEMES.map(t =>
+    `<div class="theme-dot ${t===currentTheme?'active':''}" data-t="${t}" onclick="applyTheme('${t}')" title="${t}"></div>`
+  ).join('');
+}
+
+// ── RENDER ──
+function getPriorityColor(p) {
+  return p==='high' ? '#ff6b8a' : p==='medium' ? '#ffd96b' : '#6bffb8';
+}
+
+function render() {
+  tasks = load('tasks', []);
+  settings = load('settings', { widgetTheme: 'dark' });
+
+  const pending = tasks.filter(t => t.status !== 'done');
+  const done = tasks.filter(t => t.status === 'done');
+  const total = pending.length;
+
+  document.getElementById('count-num').textContent = total;
+  document.getElementById('count-label').textContent = total === 1 ? 'to-do' : 'to-dos';
+  document.getElementById('footer-stats').textContent =
+    `${done.length} completed · ${tasks.length} total`;
+
+  const list = document.getElementById('task-list');
+
+  if (!total && !showDone) {
+    list.innerHTML = `<div class="empty-msg">
+      <span class="empty-icon">✨</span>
+      You're all caught up!<br/>
+      <span style="font-size:12px;opacity:0.6">Tap + to add a task</span>
+    </div>`;
+    return;
+  }
+
+  let html = '';
+
+  // Pending tasks — grouped by priority
+  const high = pending.filter(t => t.priority === 'high');
+  const medium = pending.filter(t => t.priority === 'medium');
+  const low = pending.filter(t => t.priority === 'low');
+  const none = pending.filter(t => !t.priority);
+
+  if (high.length) {
+    html += `<span class="section-tag">🔴 High Priority</span>`;
+    html += high.map(t => taskHTML(t)).join('');
+  }
+  if (medium.length) {
+    html += `<span class="section-tag">🟡 Medium</span>`;
+    html += medium.map(t => taskHTML(t)).join('');
+  }
+  if (low.length) {
+    html += `<span class="section-tag">🟢 Low</span>`;
+    html += low.map(t => taskHTML(t)).join('');
+  }
+  if (none.length) {
+    html += none.map(t => taskHTML(t)).join('');
+  }
+
+  // Completed tasks (collapsible)
+  if (done.length) {
+    html += `<button class="done-toggle" onclick="toggleDone()">
+      ${showDone ? '▾' : '▸'} ${done.length} completed task${done.length>1?'s':''}
+    </button>`;
+    if (showDone) {
+      html += done.slice(0,5).map(t => taskHTML(t, true)).join('');
+    }
+  }
+
+  list.innerHTML = html;
+}
+
+function taskHTML(t, isDone = false) {
+  const dueStr = t.due ? `📅 ${t.due}` : '';
+  const catStr = t.category || '';
+  return `<div class="task-item priority-${t.priority||'medium'} ${isDone?'':''}">
+    <div class="circle ${isDone?'done':''}" onclick="toggleTask('${t.id}', event)" id="circle-${t.id}"></div>
+    <div class="task-text ${isDone?'done-text':''}">${escHtml(t.title)}</div>
+    ${dueStr || catStr ? `<div class="task-meta-small">
+      ${dueStr ? `<span>${dueStr}</span>` : ''}
+      ${catStr ? `<span>${catStr}</span>` : ''}
+    </div>` : ''}
+  </div>`;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── TOGGLE TASK DONE ──
+function toggleTask(id, e) {
+  e.stopPropagation();
+  tasks = load('tasks', []);
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+
+  // Animate circle
+  const circle = document.getElementById('circle-'+id);
+  if (circle) {
+    circle.classList.add('bounce');
+    circle.classList.toggle('done');
+    setTimeout(() => circle.classList.remove('bounce'), 300);
+  }
+
+  // Mark as done or reopen
+  const newStatus = t.status === 'done' ? 'todo' : 'done';
+  tasks = tasks.map(x => x.id === id ? {...x, status: newStatus} : x);
+  save('tasks', tasks);
+
+  // Short delay before re-render so animation is visible
+  setTimeout(render, 350);
+}
+
+// ── ADD TASK ──
+function toggleAddRow() {
+  const row = document.getElementById('add-row');
+  row.classList.toggle('show');
+  if (row.classList.contains('show')) {
+    document.getElementById('add-input').focus();
+  }
+}
+
+function confirmAdd() {
+  const input = document.getElementById('add-input');
+  const title = input.value.trim();
+  if (!title) return;
+
+  tasks = load('tasks', []);
+  tasks.push({
+    id: Date.now().toString(),
+    title,
+    category: 'personal',
+    priority: 'medium',
+    due: '',
+    reminder: '',
+    progress: 0,
+    status: 'todo',
+    created: Date.now()
+  });
+  save('tasks', tasks);
+  input.value = '';
+  document.getElementById('add-row').classList.remove('show');
+  render();
+}
+
+// ── TOGGLE DONE SECTION ──
+function toggleDone() {
+  showDone = !showDone;
+  render();
+}
+
+// ── AUTO REFRESH ──
+setInterval(render, 10000);
+
+// ── INIT ──
+window.onload = () => {
+  // Generate proper canvas icon
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512; canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    const r = 100;
+    ctx.beginPath();
+    ctx.moveTo(r,0); ctx.lineTo(512-r,0); ctx.quadraticCurveTo(512,0,512,r);
+    ctx.lineTo(512,512-r); ctx.quadraticCurveTo(512,512,512-r,512);
+    ctx.lineTo(r,512); ctx.quadraticCurveTo(0,512,0,512-r);
+    ctx.lineTo(0,r); ctx.quadraticCurveTo(0,0,r,0); ctx.closePath();
+    const grad = ctx.createLinearGradient(0,0,512,512);
+    grad.addColorStop(0,'#8b5cc8'); grad.addColorStop(1,'#4a1f80');
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 260px serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 16;
+    ctx.fillText('✓', 256, 270);
+    const png = canvas.toDataURL('image/png');
+    document.querySelector('link[rel="apple-touch-icon"]').href = png;
+    document.querySelector('link[rel="icon"]').href = png;
+  } catch(e) {}
+
+  applyTheme(currentTheme);
+  buildThemeDots();
+  render();
+};
+</script>
+</body>
+</html>

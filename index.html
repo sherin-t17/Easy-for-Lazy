@@ -34,17 +34,17 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg: #f8f5ff;
+  --bg: #f0ebff;
   --surface: #ffffff;
-  --surface2: #efe9ff;
-  --surface3: #e4dbf8;
-  --border: rgba(139,100,220,0.15);
-  --accent: #6b3fa0;
-  --accent2: #9b6dd6;
-  --accent-soft: rgba(139,100,220,0.1);
-  --text: #1e1035;
-  --text2: #4a3870;
-  --text3: #8e7aad;
+  --surface2: #e8dfff;
+  --surface3: #ddd3f5;
+  --border: rgba(139,100,220,0.22);
+  --accent: #5c2d91;
+  --accent2: #8b5cc8;
+  --accent-soft: rgba(139,100,220,0.14);
+  --text: #160b2e;
+  --text2: #3d2d62;
+  --text3: #7a66a0;
   --danger: #c0355a;
   --success: #2e9e72;
   --warning: #b8860b;
@@ -53,8 +53,8 @@
   --sidebar-w: 220px;
   --font-display: 'DM Serif Display', serif;
   --font-body: 'DM Sans', sans-serif;
-  --shadow: 0 4px 24px rgba(107,63,160,0.12);
-  --glow: 0 0 20px rgba(139,100,220,0.18);
+  --shadow: 0 4px 24px rgba(107,63,160,0.18);
+  --glow: 0 0 24px rgba(139,100,220,0.25);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -65,20 +65,10 @@ body {
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
-  background-image: radial-gradient(ellipse at 15% 40%, rgba(180,150,255,0.18) 0%, transparent 55%),
-                    radial-gradient(ellipse at 85% 15%, rgba(210,190,255,0.14) 0%, transparent 50%);
+  background-image: radial-gradient(ellipse at 15% 40%, rgba(160,120,255,0.28) 0%, transparent 55%),
+                    radial-gradient(ellipse at 85% 15%, rgba(190,160,255,0.22) 0%, transparent 50%);
 }
 
-/* PWA Background override */
-body.pwa-bg-castle { background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80') !important; background-size: cover !important; background-position: center !important; }
-body.pwa-bg-flowers { background-image: url('https://images.unsplash.com/photo-1490750967868-88df5691166b?w=800&q=80') !important; background-size: cover !important; background-position: center !important; }
-body.pwa-bg-sky { background-image: url('https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=800&q=80') !important; background-size: cover !important; background-position: center !important; }
-body.pwa-bg-dots { background-image: radial-gradient(circle, rgba(155,109,255,0.3) 1px, transparent 1px) !important; background-size: 24px 24px !important; }
-body.pwa-bg-waves { background-image: repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(155,109,255,0.06) 20px, rgba(155,109,255,0.06) 21px) !important; }
-body.pwa-bg-lines { background-image: repeating-linear-gradient(45deg, rgba(155,109,255,0.05) 0, rgba(155,109,255,0.05) 1px, transparent 0, transparent 50%) !important; background-size: 20px 20px !important; }
-body.pwa-bg-lavender { background: #e8e0ff !important; --bg: #e8e0ff; --surface: #f0ebff; --text: #1a0a3a; --text2: #4a3a6a; }
-body.pwa-bg-blush { background: #ffe8f0 !important; --bg: #ffe8f0; --surface: #fff0f5; --text: #3a0a1a; --text2: #6a3a4a; }
-body.pwa-bg-mint { background: #e0fff5 !important; --bg: #e0fff5; --surface: #ebfff8; --text: #0a2a1a; --text2: #3a6a5a; }
 
 /* LAYOUT */
 .app { display: flex; min-height: 100vh; }
@@ -457,17 +447,6 @@ label { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-
 /* SETTINGS */
 .settings-section { margin-bottom: 28px; }
 .settings-title { font-family: var(--font-display); font-size: 18px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-.bg-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 10px; }
-.bg-option {
-  border: 2px solid var(--border); border-radius: var(--radius-sm);
-  cursor: pointer; overflow: hidden; aspect-ratio: 16/9;
-  transition: all 0.2s; position: relative;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-}
-.bg-option:hover { border-color: var(--accent); }
-.bg-option.active { border-color: var(--accent2); box-shadow: 0 0 0 2px var(--accent); }
-.bg-option span { font-size: 10px; color: var(--text2); margin-top: 4px; }
 
 /* BOTTOM NAV (mobile) */
 .bottom-nav {
@@ -633,6 +612,91 @@ input:checked + .toggle-slider::before { transform: translateX(20px); }
 .mood-btn:hover { transform: scale(1.2); }
 .mood-btn.selected { border-color: var(--accent); background: var(--accent-soft); }
 
+/* ABOUT SLIDER */
+.about-slider-wrap { position: relative; overflow: hidden; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); }
+.about-slider { display: flex; transition: transform 0.4s cubic-bezier(.4,0,.2,1); will-change: transform; }
+.about-slide { min-width: 100%; display: flex; flex-direction: column; }
+.about-slide-visual {
+  background: linear-gradient(135deg, #ede8ff, #ddd3f5);
+  min-height: 220px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; border-radius: var(--radius) var(--radius) 0 0;
+  padding: 20px;
+}
+.slide-big-icon { font-size: 80px; z-index: 1; animation: floatIcon 3s ease-in-out infinite; }
+@keyframes floatIcon { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.slide-decoration { position: absolute; inset: 0; pointer-events: none; }
+.deco-dot { position: absolute; border-radius: 50%; display: block; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);opacity:0.7} 50%{transform:scale(1.4);opacity:1} }
+
+.slide-content { padding: 20px; }
+.slide-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--accent2); font-weight: 700; margin-bottom: 6px; }
+.slide-title { font-family: var(--font-display); font-size: 26px; color: var(--text); margin-bottom: 10px; line-height: 1.2; }
+.slide-desc { font-size: 14px; color: var(--text2); line-height: 1.7; margin-bottom: 14px; }
+.slide-tip { font-size: 12px; color: var(--text3); background: var(--surface2); padding: 8px 12px; border-radius: 8px; border-left: 3px solid var(--accent2); }
+.slide-try-btn {
+  background: var(--accent); color: white; border: none;
+  padding: 11px 22px; border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.slide-try-btn:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(92,45,145,0.3); }
+
+/* Slider nav */
+.about-nav { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 16px; }
+.about-arrow {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--accent-soft); border: 1px solid var(--border);
+  color: var(--accent); font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.about-arrow:hover { background: var(--accent); color: white; }
+.about-arrow:disabled { opacity: 0.3; cursor: default; }
+.about-dots { display: flex; gap: 6px; }
+.about-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border); cursor: pointer; transition: all 0.3s;
+}
+.about-dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
+
+/* Demo visuals */
+.kanban-demo { display: flex; gap: 6px; width: 100%; }
+.demo-col { flex: 1; background: rgba(255,255,255,0.7); border-radius: 8px; padding: 8px; }
+.demo-col-head { font-size: 9px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.demo-task { background: white; border-radius: 6px; padding: 6px 8px; font-size: 10px; margin-bottom: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+
+.cal-demo { width: 100%; }
+.cal-demo-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+.cal-demo-day { background: white; border-radius: 6px; padding: 6px 2px; font-size: 11px; font-weight: 600; text-align: center; position: relative; min-height: 36px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+
+.events-demo { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.event-demo-card { background: white; border-radius: 10px; padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+.habits-demo { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.habit-demo-row { background: white; border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.habit-demo-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #8b5cc8; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+.habit-demo-check.done { background: #8b5cc8; color: white; border-color: #8b5cc8; }
+.streak-demo { display: flex; gap: 3px; margin-top: 4px; }
+.sdot { width: 8px; height: 8px; border-radius: 2px; background: #e8dfff; }
+.sdot.done { background: #8b5cc8; }
+
+.notes-demo { width: 100%; }
+.widget-demo { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 16px; width: 100%; }
+.widget-task-demo { background: rgba(255,255,255,0.06); border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; font-size: 11px; color: rgba(255,255,255,0.85); }
+
+/* Tips */
+.tip-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; display: flex; gap: 12px; align-items: flex-start; font-size: 13px; color: var(--text2); line-height: 1.6; }
+.tip-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+
+/* Mobile about tweaks */
+@media (max-width: 768px) {
+  .about-slide-visual { min-height: 180px; }
+  .slide-big-icon { font-size: 60px; }
+  .slide-title { font-size: 22px; }
+  .kanban-demo { gap: 4px; }
+  .demo-task { font-size: 9px; padding: 4px 6px; }
+}
+
 /* FEEDBACK TAGS */
 .feedback-tag {
   display: inline-flex; align-items: center;
@@ -719,6 +783,9 @@ input:checked + .toggle-slider::before { transform: translateX(20px); }
     </div>
     <div class="nav-item" onclick="navigate('settings')" data-page="settings" style="margin-top:auto">
       <span class="nav-icon">⚙️</span> Settings
+    </div>
+    <div class="nav-item" onclick="navigate('about')" data-page="about">
+      <span class="nav-icon">ℹ️</span> About
     </div>
     <div class="nav-item" onclick="navigate('feedback')" data-page="feedback">
       <span class="nav-icon">💬</span> Feedback
@@ -972,15 +1039,284 @@ input:checked + .toggle-slider::before { transform: translateX(20px); }
       </div>
 
       <div class="settings-section">
-        <div class="settings-title">PWA Background <span style="font-size:12px;color:var(--text3);font-family:var(--font-body)">(Add to Home Screen)</span></div>
-        <p style="font-size:13px;color:var(--text3);margin-bottom:14px">Choose a background shown when using as a home screen app</p>
-        <div class="bg-options" id="bg-options"></div>
+        <div class="settings-title">📱 Home Screen Widget</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:14px">Add a <strong>live task widget</strong> to your home screen — see and manage your to-dos without opening the app.</p>
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);margin-bottom:14px">
+          <div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">How to add</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.9">
+            1️⃣ Tap the button below to open the widget<br/>
+            2️⃣ On iOS: tap <strong>Share → Add to Home Screen</strong><br/>
+            2️⃣ On Android: tap <strong>⋮ → Add to Home Screen</strong><br/>
+            3️⃣ Done — your tasks live on your home screen!
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <label>Widget Card Theme</label>
+          <select id="widget-theme-select" onchange="saveWidgetTheme()" style="margin-top:6px">
+            <option value="dark">🌙 Dark (like the screenshot)</option>
+            <option value="purple">💜 Purple Minimal</option>
+            <option value="lavender">🪻 Lavender</option>
+            <option value="blush">🌷 Blush Pink</option>
+            <option value="mint">🍃 Mint</option>
+            <option value="glass">🪟 Glass / Frosted</option>
+          </select>
+        </div>
+        <a href="widget.html" target="_blank" style="text-decoration:none">
+          <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;font-size:14px">
+            Open Widget Page →
+          </button>
+        </a>
       </div>
+
 
       <div class="settings-section">
         <div class="settings-title">Data</div>
         <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑 Clear All Data</button>
       </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="page" id="page-about">
+      <div class="topbar">
+        <button class="menu-toggle" onclick="openSidebar()">☰</button>
+        <h1 class="page-title" style="margin:0 auto 0 12px">How to Use</h1>
+      </div>
+
+      <!-- Slide container -->
+      <div class="about-slider-wrap">
+        <div class="about-slider" id="about-slider">
+
+          <!-- Slide 1: Welcome -->
+          <div class="about-slide">
+            <div class="about-slide-visual">
+              <div class="slide-big-icon">🌸</div>
+              <div class="slide-decoration">
+                <span class="deco-dot" style="top:10%;left:15%;width:12px;height:12px;background:#c4a8ff;animation-delay:0s"></span>
+                <span class="deco-dot" style="top:20%;right:20%;width:8px;height:8px;background:#ffb6c1;animation-delay:0.5s"></span>
+                <span class="deco-dot" style="bottom:15%;left:25%;width:10px;height:10px;background:#a8d8ff;animation-delay:1s"></span>
+              </div>
+            </div>
+            <div class="slide-content">
+              <div class="slide-tag">Welcome</div>
+              <h2 class="slide-title">Easy for Lazy</h2>
+              <p class="slide-desc">Your all-in-one personal space — tasks, habits, notes, calendar, events and more. Everything in one beautiful app.</p>
+              <div class="slide-tip">💡 Swipe or tap arrows to explore each feature</div>
+            </div>
+          </div>
+
+          <!-- Slide 2: Tasks -->
+          <div class="about-slide">
+            <div class="about-slide-visual" style="background:linear-gradient(135deg,#f0e8ff,#e8d5ff)">
+              <div class="kanban-demo">
+                <div class="demo-col">
+                  <div class="demo-col-head" style="color:#5c2d91">📋 To Do</div>
+                  <div class="demo-task" style="border-left:3px solid #ff6b8a">Design UI 🔴</div>
+                  <div class="demo-task" style="border-left:3px solid #ffd96b">Write notes 🟡</div>
+                </div>
+                <div class="demo-col">
+                  <div class="demo-col-head" style="color:#5c2d91">⚡ Doing</div>
+                  <div class="demo-task" style="border-left:3px solid #6bffb8;opacity:0.9">Study 🟢</div>
+                </div>
+                <div class="demo-col">
+                  <div class="demo-col-head" style="color:#5c2d91">✅ Done</div>
+                  <div class="demo-task" style="opacity:0.4;text-decoration:line-through;font-size:10px">Read book</div>
+                </div>
+              </div>
+            </div>
+            <div class="slide-content">
+              <div class="slide-tag">Tasks</div>
+              <h2 class="slide-title">Kanban Board</h2>
+              <p class="slide-desc">Add tasks with priority, due date & category. Drag them across <strong>To Do → In Progress → Done</strong>. Filter and search instantly.</p>
+              <button class="slide-try-btn" onclick="navigate('tasks')">Try Tasks →</button>
+            </div>
+          </div>
+
+          <!-- Slide 3: Calendar -->
+          <div class="about-slide">
+            <div class="about-slide-visual" style="background:linear-gradient(135deg,#e8f4ff,#d5eaff)">
+              <div class="cal-demo">
+                <div class="cal-demo-grid">
+                  <div class="cal-demo-day" style="background:#f0e8ff;border:1.5px solid #8b5cc8;color:#5c2d91;font-weight:700">30<br/><span style="font-size:9px">😊</span></div>
+                  <div class="cal-demo-day">31</div>
+                  <div class="cal-demo-day" style="position:relative">1<span style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:#8b5cc8;border-radius:50%;display:block"></span></div>
+                  <div class="cal-demo-day">2<br/><span style="font-size:9px">🎂</span></div>
+                  <div class="cal-demo-day">3</div>
+                  <div class="cal-demo-day" style="position:relative">4<span style="position:absolute;bottom:2px;width:4px;height:4px;background:#ff6b9d;border-radius:50%;display:block;left:50%;transform:translateX(-50%)"></span></div>
+                  <div class="cal-demo-day">5</div>
+                </div>
+                <div style="font-size:10px;color:#5c2d91;margin-top:8px;text-align:center">Tap any date to add mood + memory</div>
+              </div>
+            </div>
+            <div class="slide-content">
+              <div class="slide-tag">Calendar</div>
+              <h2 class="slide-title">Mood & Memories</h2>
+              <p class="slide-desc">Tap any date to log your <strong>mood</strong>, write a memory, or mark special occasions 🎂💍🎉. Your emoji shows right on the calendar.</p>
+              <button class="slide-try-btn" onclick="navigate('calendar')">Try Calendar →</button>
+            </div>
+          </div>
+
+          <!-- Slide 4: Events -->
+          <div class="about-slide">
+            <div class="about-slide-visual" style="background:linear-gradient(135deg,#fff0f8,#ffe0f0)">
+              <div class="events-demo">
+                <div class="event-demo-card" style="border-left:4px solid #ff6b9d">
+                  <span style="font-size:22px">🎂</span>
+                  <div>
+                    <div style="font-weight:600;font-size:13px">Priya's Birthday</div>
+                    <div style="font-size:11px;color:#888">👤 Priya · April 2</div>
+                    <div style="font-size:11px;background:#ffe8f0;color:#c0355a;padding:2px 8px;border-radius:10px;display:inline-block;margin-top:3px">⏳ In 3 days</div>
+                  </div>
+                </div>
+                <div class="event-demo-card" style="border-left:4px solid #9b6dd6">
+                  <span style="font-size:22px">💍</span>
+                  <div>
+                    <div style="font-weight:600;font-size:13px">Anniversary</div>
+                    <div style="font-size:11px;color:#888">💍 · June 15</div>
+                    <div style="font-size:11px;background:#f0e8ff;color:#5c2d91;padding:2px 8px;border-radius:10px;display:inline-block;margin-top:3px">⏳ In 76 days</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slide-content">
+              <div class="slide-tag">Events</div>
+              <h2 class="slide-title">Never Forget</h2>
+              <p class="slide-desc">Add birthdays, anniversaries, work deadlines. Set <strong>yearly repeat</strong> and a reminder. Countdown shows automatically.</p>
+              <button class="slide-try-btn" onclick="navigate('events')">Try Events →</button>
+            </div>
+          </div>
+
+          <!-- Slide 5: Habits -->
+          <div class="about-slide">
+            <div class="about-slide-visual" style="background:linear-gradient(135deg,#e8fff4,#d5ffe8)">
+              <div class="habits-demo">
+                <div class="habit-demo-row">
+                  <div class="habit-demo-check done">✓</div>
+                  <div style="flex:1">
+                    <div style="font-size:13px;font-weight:600">📚 Read 30 mins</div>
+                    <div class="streak-demo">
+                      <span class="sdot done"></span><span class="sdot done"></span><span class="sdot done"></span>
+                      <span class="sdot done"></span><span class="sdot done"></span><span class="sdot"></span><span class="sdot"></span>
+                    </div>
+                  </div>
+                  <div style="font-size:11px;color:#b8860b">🔥 5 days</div>
+                </div>
+                <div class="habit-demo-row">
+                  <div class="habit-demo-check">○</div>
+                  <div style="flex:1">
+                    <div style="font-size:13px;font-weight:600">💧 Drink water</div>
+                    <div class="streak-demo">
+                      <span class="sdot done"></span><span class="sdot done"></span><span class="sdot"></span>
+                      <span class="sdot done"></span><span class="sdot"></span><span class="sdot"></span><span class="sdot"></span>
+                    </div>
+                  </div>
+                  <div style="font-size:11px;color:#b8860b">🔥 2 days</div>
+                </div>
+              </div>
+            </div>
+            <div class="slide-content">
+              <div class="slide-tag">Habits</div>
+              <h2 class="slide-title">Build Streaks</h2>
+              <p class="slide-desc">Track daily and weekly habits. Check them off each day, watch your <strong>🔥 streak</strong> grow. 7-day dots show your consistency.</p>
+              <button class="slide-try-btn" onclick="navigate('habits')">Try Habits →</button>
+            </div>
+          </div>
+
+          <!-- Slide 6: Notes -->
+          <div class="about-slide">
+            <div class="about-slide-visual" style="background:linear-gradient(135deg,#fffff0,#fff8d5)">
+              <div class="notes-demo">
+                <div class="note-demo-card" style="background:#fff;border:1.5px solid #e0d8f5;border-radius:12px;padding:12px;margin-bottom:8px;position:relative">
+                  <div style="position:absolute;top:8px;right:8px;font-size:12px">📌</div>
+                  <div style="font-weight:700;font-size:13px;margin-bottom:4px">Study Plan 📚</div>
+                  <div style="font-size:11px;color:#666;line-height:1.5">Chapter 4 notes — Data Structures...</div>
+                  <div style="display:flex;justify-content:space-between;margin-top:8px">
+                    <span style="background:#e8dfff;color:#5c2d91;border-radius:10px;padding:2px 8px;font-size:10px">study</span>
+                    <span style="font-size:10px;color:#aaa">Today 2:30pm</span>
+                  </div>
+                </div>
+                <div class="note-demo-card" style="background:#fff;border:1.5px solid #e0d8f5;border-radius:12px;padding:12px">
+                  <div style="font-weight:700;font-size:13px;margin-bottom:4px">Random thoughts 💭</div>
+                  <div style="font-size:11px;color:#666">Ideas for the weekend trip...</div>
+                  <div style="display:flex;justify-content:space-between;margin-top:8px">
+                    <span style="background:#ffe8f0;color:#c0355a;border-radius:10px;padding:2px 8px;font-size:10px">personal</span>
+                    <span style="font-size:10px;color:#aaa">Yesterday</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slide-content">
+              <div class="slide-tag">Notes</div>
+              <h2 class="slide-title">Your Notebook</h2>
+              <p class="slide-desc">Write anything — tag by topic, <strong>pin</strong> important notes, search instantly. Works like your phone's notes app.</p>
+              <button class="slide-try-btn" onclick="navigate('notes')">Try Notes →</button>
+            </div>
+          </div>
+
+          <!-- Slide 7: Widget -->
+          <div class="about-slide">
+            <div class="about-slide-visual" style="background:linear-gradient(135deg,#1a0a30,#2d1060)">
+              <div class="widget-demo">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+                  <div>
+                    <div style="font-family:'DM Serif Display',serif;font-size:36px;color:#c4a8ff;line-height:1">4</div>
+                    <div style="font-size:11px;color:rgba(200,180,255,0.6);letter-spacing:1px">to-dos</div>
+                  </div>
+                  <div style="width:32px;height:32px;background:#6b3fa0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer">+</div>
+                </div>
+                <div class="widget-task-demo" style="border-left:3px solid #ff6b8a">Study chapter 4 🔴</div>
+                <div class="widget-task-demo" style="border-left:3px solid #ffd96b">Reply emails 🟡</div>
+                <div class="widget-task-demo" style="border-left:3px solid #6bffb8;opacity:0.7">Buy groceries 🟢</div>
+              </div>
+            </div>
+            <div class="slide-content">
+              <div class="slide-tag">Widget</div>
+              <h2 class="slide-title">Home Screen Widget</h2>
+              <p class="slide-desc">Open <strong>widget.html</strong>, add to your home screen. See and check off tasks <em>without opening the app</em>. 6 themes to choose from.</p>
+              <button class="slide-try-btn" onclick="navigate('settings')">Set it up →</button>
+            </div>
+          </div>
+
+        </div><!-- end slider -->
+
+        <!-- Navigation -->
+        <div class="about-nav">
+          <button class="about-arrow" id="about-prev" onclick="aboutSlide(-1)">‹</button>
+          <div class="about-dots" id="about-dots"></div>
+          <button class="about-arrow" id="about-next" onclick="aboutSlide(1)">›</button>
+        </div>
+
+        <!-- Slide counter -->
+        <div style="text-align:center;margin-top:8px;font-size:12px;color:var(--text3)" id="about-counter"></div>
+
+      </div><!-- end slider-wrap -->
+
+      <!-- Tips section below slider -->
+      <div style="margin-top:24px">
+        <div class="section-header"><h3>💡 Quick Tips</h3></div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+          <div class="tip-card">
+            <span class="tip-icon">📱</span>
+            <div><strong>Add to home screen</strong> — Open in mobile browser → Share → Add to Home Screen for a full app experience</div>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">🔄</span>
+            <div><strong>Widget syncs live</strong> — The task widget shares data with this app. Complete a task in the widget and it updates here too</div>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">🎨</span>
+            <div><strong>Widget themes</strong> — Go to Settings → Home Screen Widget to choose your widget card style</div>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">🔔</span>
+            <div><strong>Reminders work best on HTTPS</strong> — Host on GitHub Pages (free) for notifications and the app icon to work properly</div>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">📅</span>
+            <div><strong>Calendar entries</strong> — You can add multiple entries per day. Each saves separately with its own mood and note</div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- FEEDBACK -->
@@ -1231,23 +1567,41 @@ const QUOTES = [
   "Great things take time. Be patient.",
   "One task at a time. You've got this.",
   "Today's effort is tomorrow's reward.",
-  "Consistency is the key to success."
+  "Consistency is the key to success.",
+  "Done is better than perfect.",
+  "Rest is productive too.",
+  "You are doing better than you think.",
+  "Start somewhere. Anywhere.",
+  "Progress, not perfection.",
+  "Little by little, a little becomes a lot.",
+  "Be kind to yourself today.",
+  "You've got this — one step at a time.",
+  "The hardest part is starting. You already did.",
+  "Celebrate small wins. They add up.",
+  "Your future self will thank you.",
+  "Breathe. Focus. Begin.",
+  "Make today count.",
+  "One good decision at a time.",
+  "You are enough, exactly as you are.",
+  "Keep going. You're closer than you think.",
+  "Energy flows where attention goes.",
+  "Today is a good day to try.",
+  "Be patient with yourself.",
+  "Slow progress is still progress."
 ];
+
+function getDailyQuote() {
+  const d = new Date();
+  const dateStr = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+  let hash = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    hash = ((hash << 5) - hash) + dateStr.charCodeAt(i);
+    hash |= 0;
+  }
+  return QUOTES[Math.abs(hash) % QUOTES.length];
+}
 
 const MOOD_COLORS = { '😊':'#6bffb8','😔':'#6bb8ff','😤':'#ff6b8a','😴':'#b8b8ff','🥰':'#ffb6c1','😰':'#ffd96b','🤩':'#ff9b6b','😌':'#c4a8ff' };
-
-const BG_OPTIONS = [
-  { id:'none', label:'Default', emoji:'🌙', class:'' },
-  { id:'castle', label:'Castle', emoji:'🏰', class:'pwa-bg-castle' },
-  { id:'flowers', label:'Flowers', emoji:'🌸', class:'pwa-bg-flowers' },
-  { id:'sky', label:'Sky', emoji:'☁️', class:'pwa-bg-sky' },
-  { id:'dots', label:'Dots', emoji:'⚫', class:'pwa-bg-dots' },
-  { id:'waves', label:'Waves', emoji:'〰️', class:'pwa-bg-waves' },
-  { id:'lines', label:'Lines', emoji:'📐', class:'pwa-bg-lines' },
-  { id:'lavender', label:'Lavender', emoji:'💜', class:'pwa-bg-lavender' },
-  { id:'blush', label:'Blush', emoji:'🌷', class:'pwa-bg-blush' },
-  { id:'mint', label:'Mint', emoji:'🍃', class:'pwa-bg-mint' },
-];
 
 function load(key, def) { try { return JSON.parse(localStorage.getItem('efl_'+key)) ?? def; } catch { return def; } }
 function save(key, val) { localStorage.setItem('efl_'+key, JSON.stringify(val)); }
@@ -1257,7 +1611,7 @@ let habits = load('habits', []);
 let notes = load('notes', []);
 let events = load('events', []);
 let calData = load('caldata', {});
-let settings = load('settings', { name:'', notif:false, inapp:true, bg:'none' });
+let settings = load('settings', { name:'', notif:false, inapp:true, widgetTheme:'dark' });
 let habitLogs = load('habitlogs', {}); // { 'habitId_dateStr': true }
 let dragId = null;
 let calYear, calMonth, selectedDate;
@@ -1291,7 +1645,6 @@ function init() {
   renderNotes();
   renderEvents();
   initSettings();
-  applyBg(settings.bg);
   setInterval(updateOverview, 60000);
   setInterval(checkReminders, 30000);
   // Range input
@@ -1313,6 +1666,7 @@ function navigate(page) {
   if (page === 'habits') renderHabits();
   if (page === 'notes') renderNotes();
   if (page === 'events') renderEvents();
+  if (page === 'about') renderAbout();
 }
 
 function openSidebar() {
@@ -1335,7 +1689,7 @@ function updateOverview() {
   document.getElementById('greeting-time').textContent = greeting;
   document.getElementById('greeting-name').innerHTML = `Hello, <span>${settings.name}!</span>`;
   document.getElementById('greeting-date').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-  document.getElementById('quote-text').textContent = QUOTES[now.getDate() % QUOTES.length];
+  document.getElementById('quote-text').textContent = getDailyQuote();
 
   const todayStr = now.toISOString().split('T')[0];
   const total = tasks.length;
@@ -1862,11 +2216,17 @@ function showToast(title, body) {
 }
 
 // ============ SETTINGS ============
+function saveWidgetTheme() {
+  settings.widgetTheme = document.getElementById('widget-theme-select').value;
+  save('settings', settings);
+  showToast('🎨 Widget theme saved', 'Open the widget to see changes');
+}
+
 function initSettings() {
   document.getElementById('settings-name').value = settings.name;
   document.getElementById('notif-toggle').checked = settings.notif;
   document.getElementById('inapp-toggle').checked = settings.inapp !== false;
-  renderBgOptions();
+  document.getElementById('widget-theme-select').value = settings.widgetTheme || 'dark';
 }
 
 function saveName() {
@@ -1874,30 +2234,6 @@ function saveName() {
   save('settings', settings);
   showToast('✅ Saved', 'Name updated!');
   updateOverview();
-}
-
-function renderBgOptions() {
-  document.getElementById('bg-options').innerHTML = BG_OPTIONS.map(o => `
-    <div class="bg-option ${settings.bg===o.id?'active':''}" onclick="selectBg('${o.id}','${o.class}')">
-      <div style="text-align:center">
-        <div style="font-size:24px">${o.emoji}</div>
-        <div style="font-size:10px;color:var(--text2);margin-top:4px">${o.label}</div>
-      </div>
-    </div>`).join('');
-}
-
-function selectBg(id, cls) {
-  settings.bg = id;
-  save('settings', settings);
-  applyBg(id);
-  renderBgOptions();
-  showToast('🎨 Background updated', 'Enjoy your new look!');
-}
-
-function applyBg(id) {
-  BG_OPTIONS.forEach(o => document.body.classList.remove(o.class));
-  const opt = BG_OPTIONS.find(o => o.id === id);
-  if (opt?.class) document.body.classList.add(opt.class);
 }
 
 function clearAllData() {
@@ -2085,6 +2421,50 @@ function renderEvents() {
       </div>
     </div>`;
   }).join('');
+}
+
+// ============ ABOUT SLIDER ============
+let aboutCurrentSlide = 0;
+const ABOUT_TOTAL = 7;
+
+function renderAbout() {
+  buildAboutDots();
+  goToSlide(0);
+  initAboutSwipe();
+}
+
+function buildAboutDots() {
+  const el = document.getElementById('about-dots');
+  if (!el) return;
+  el.innerHTML = Array.from({length: ABOUT_TOTAL}, (_,i) =>
+    `<div class="about-dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`
+  ).join('');
+}
+
+function goToSlide(n) {
+  aboutCurrentSlide = Math.max(0, Math.min(n, ABOUT_TOTAL-1));
+  const slider = document.getElementById('about-slider');
+  if (slider) slider.style.transform = `translateX(-${aboutCurrentSlide * 100}%)`;
+  document.querySelectorAll('.about-dot').forEach((d,i) => d.classList.toggle('active', i===aboutCurrentSlide));
+  const counter = document.getElementById('about-counter');
+  if (counter) counter.textContent = `${aboutCurrentSlide+1} of ${ABOUT_TOTAL}`;
+  const prev = document.getElementById('about-prev');
+  const next = document.getElementById('about-next');
+  if (prev) prev.disabled = aboutCurrentSlide === 0;
+  if (next) next.disabled = aboutCurrentSlide === ABOUT_TOTAL-1;
+}
+
+function aboutSlide(dir) { goToSlide(aboutCurrentSlide + dir); }
+
+function initAboutSwipe() {
+  const slider = document.getElementById('about-slider');
+  if (!slider) return;
+  let startX = 0;
+  slider.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+  slider.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) aboutSlide(diff > 0 ? 1 : -1);
+  }, {passive:true});
 }
 
 // ============ UTILS ============
